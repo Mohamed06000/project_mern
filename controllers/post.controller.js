@@ -4,7 +4,7 @@ const ObjectID = require('mongoose').Types.ObjectId
 
 
 module.exports.readPost = (req, res) => {
-    PostModel.find((err,data) => {
+    PostModel.find((err, data) => {
         if (!err) res.send(data)
         else console.log('Error to get data : ' + err)
     })
@@ -20,7 +20,7 @@ module.exports.createPost = async (req, res) => {
         comments: []
     })
 
-    try{
+    try {
         const post = await newPost.save()
         return res.status(201).json(post)
     } catch (err) {
@@ -32,7 +32,7 @@ module.exports.updatePost = (req, res) => {
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send('ID unknown : ' + req.params.id)
 
-    const updatedRecord =  {
+    const updatedRecord = {
         message: req.body.message
     }
 
@@ -40,15 +40,12 @@ module.exports.updatePost = (req, res) => {
         req.params.id,
         {$set: updatedRecord},
         {
-            new: true,
-            upsert: true,
-            setDefaultsOnInsert: true
+            new: true
         },
         (err, data) => {
             if (!err) return res.send(data)
-            if (err) return res.status(500).send({message: err})
+            else console.log("Update error : " + err)
         }
-
     )
 }
 
@@ -63,4 +60,61 @@ module.exports.deletePost = async (req, res) => {
             if (err) return res.status(500).send({message: err})
         }
     )
+}
+
+module.exports.likePost = async (req, res) => {
+    if (!ObjectID.isValid(req.params.id))
+        return res.status(400).send('ID unknown : ' + req.params.id)
+
+    try {
+        await PostModel.findByIdAndUpdate(
+            req.params.id,
+            {$addToSet: {likers: req.body.id}},
+            {new: true},
+            (err, data) => {
+                if (err) return res.status(400).send(err)
+            }
+        )
+
+        await UserModel.findByIdAndUpdate(
+            req.body.id,
+            {$addToSet: {likes: req.params.id}},
+            {new: true},
+            (err, data) => {
+
+                if (!err) res.send(data)
+                else return res.status(400).send(err)
+            }
+        )
+    } catch (err) {
+        return res.status(400).send(err)
+    }
+
+}
+
+module.exports.unlikePost = async (req, res) => {
+    if (!ObjectID.isValid(req.params.id))
+        return res.status(400).send('ID unknown : ' + req.params.id)
+
+    try {
+        await PostModel.findByIdAndUpdate(
+            req.params.id,
+            {$pull: {likers: req.body.id}},
+            {new: true},
+            (err, data) => {
+                if (err) return res.status(400).send(err)
+            })
+
+        await UserModel.findByIdAndUpdate(
+            req.body.id,
+            {$pull: {likes: req.params.id}},
+            {new: true},
+            (err, data) => {
+                if (!err) res.send(data)
+                else return res.status(400).send(err)
+            }
+        )
+    } catch (err) {
+        return res.status(400).send(err)
+    }
 }
