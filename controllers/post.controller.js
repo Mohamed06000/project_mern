@@ -118,3 +118,85 @@ module.exports.unlikePost = async (req, res) => {
         return res.status(400).send(err)
     }
 }
+
+module.exports.commentPost = (req, res) => {
+    if (!ObjectID.isValid(req.params.id))
+        return res.status(400).send('ID unknown : ' + req.params.id)
+
+    try {
+        return PostModel.findByIdAndUpdate(
+            req.params.id,
+            {
+                $push: {
+                    comments: {
+                        commenterId: req.body.id,
+                        commenterPseudo: req.body.pseudo,
+                        text: req.body.text,
+                        timestamp: new Date().getTime()
+                    }
+                }
+            },
+            {new: true},
+            (err, data) => {
+                if (!err) return res.send(data)
+                else return res.status(400).send(err)
+            }
+        )
+    } catch (err) {
+        return res.status(400).send(err)
+    }
+}
+
+module.exports.editCommentPost = (req, res) => {
+    if (!ObjectID.isValid(req.params.id))
+        return res.status(400).send('ID unknown : ' + req.params.id)
+
+    try {
+        return PostModel.findById(
+            req.params.id,
+            (err, data) => {
+                const theComment = data.comments.find((comment) =>
+                    comment._id.equals(req.body.commentId)
+                )
+
+                if (!theComment) return res.status(400).send('Comment not found.')
+                theComment.text = req.body.text
+
+                return data.save((err) => {
+                    if (!err) return res.send(data)
+                    else return res.status(400).send(err)
+                })
+            }
+        )
+    } catch (err) {
+        return res.status(400).send(err)
+    }
+
+}
+
+module.exports.deleteCommentPost = (req, res) => {
+    if (!ObjectID.isValid(req.params.id))
+        return res.status(400).send('ID unknown : ' + req.params.id)
+
+
+    try {
+        return PostModel.findByIdAndUpdate(
+            req.params.id,
+            {
+                $pull: {
+                    comments: {
+                        _id: req.body.commentId
+                    }
+                }
+            },
+            {new: true},
+            (err, data) => {
+                if (!err) return res.send(data)
+                else return res.status(400).send(err)
+            }
+        )
+    } catch (err) {
+        return res.status(400).send(err)
+    }
+
+}
