@@ -16,7 +16,7 @@ const corsOption = {
     'allowedHeaders': ['sessionId', 'Content-Type'],
     'exposedHeaders': ['sessionId'],
     'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    'preFlightContinue': false
+    'preflightContinue': false
 }
 
 app.use(cors({corsOption}))

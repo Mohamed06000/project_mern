@@ -8,16 +8,16 @@ class SignIpForm extends React.Component {
     }
 }
 
-const Index = () => {
-    const [signUpModal, setSignUpModal] = useState(true)
-    const [signIpModal, setSignIpModal] = useState(false)
+const Index = (props) => {
+    const [signUpModal, setSignUpModal] = useState(props.signup)
+    const [signIpModal, setSignInModal] = useState(props.signin)
 
     const handleModal = (e) => {
         if (e.target.id === "register") {
-            setSignIpModal(false)
+            setSignInModal(false)
             setSignUpModal(true)
-        } else if (e.target.id === "login"){
-            setSignIpModal(true)
+        } else if (e.target.id === "login") {
+            setSignInModal(true)
             setSignUpModal(false)
         }
 
@@ -26,11 +26,12 @@ const Index = () => {
         <div className='connection-form'>
             <div className='form-container'>
                 <ul>
-                    <li onClick={handleModal} id="register">S'inscrire</li>
-                    <li onClick={handleModal} id="login">Se connecter</li>
+                    <li onClick={handleModal} id="register" className={signUpModal ? "active-btn" : null}>S'inscrire
+                    </li>
+                    <li onClick={handleModal} id="login" className={signIpModal ? "active-btn" : null}>Se connecter</li>
                 </ul>
-                {signUpModal && <SignUpForm />}
-                {signIpModal && <SignInForm />}
+                {signUpModal && <SignUpForm/>}
+                {signIpModal && <SignInForm/>}
             </div>
         </div>
     );
