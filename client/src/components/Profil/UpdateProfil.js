@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import UploadImg from "./UploadImg";
 import {updateBio} from "../../actions/user.actions";
 import {dateParser} from "../Utils";
+import FollowHandler from "./FollowHandler";
 
 const UpdateProfil = () => {
     const [bio, setBio] = useState('')
@@ -69,7 +70,30 @@ const UpdateProfil = () => {
                                             <li key={user._id}>
                                                 <img src={user.picture} alt={'user-pic'}/>
                                                 <h4>{user.pseudo}</h4>
-                                                <h1>FOLLOW HANDLER</h1>
+                                                <FollowHandler/>
+                                            </li>
+                                        )
+                                    }
+                                }
+                            })}
+                        </ul>
+                    </div>
+                </div>)}
+
+            {followersPopup && (
+                <div className={'popup-profil-container'}>
+                    <div className={"modal"}>
+                        <h3>Abonnés</h3>
+                        <span className={"cross"} onClick={() => setFollowersPopup(false)}>&#10005;</span>
+                        <ul>
+                            {usersData.map((user) => {
+                                for (let i = 0; i < userData.followers.length; i++) {
+                                    if (user._id === userData.followers[i]) {
+                                        return (
+                                            <li key={user._id}>
+                                                <img src={user.picture} alt={'user-pic'}/>
+                                                <h4>{user.pseudo}</h4>
+                                                <FollowHandler/>
                                             </li>
                                         )
                                     }
