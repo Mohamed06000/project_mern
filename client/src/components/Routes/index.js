@@ -4,6 +4,7 @@ import Profil from "../../pages/Profil";
 import Trending from "../../pages/Trending";
 import Home from "../../pages/Home";
 import Navbar from "../Navbar";
+import LeftNav from "../LeftNav";
 
 const Index = () => {
     return (
