@@ -39,9 +39,32 @@ const Card = ({post}) => {
                                     }
                                 </h3>
                                 {post.posterId !== userData._id && (<FollowHandler idToFollow={post.posterId} type={'card'} />)}
-
                             </div>
                             <span>{dateParser(post.createdAt)}</span>
+                        </div>
+                        <p>{post.message}</p>
+                        {post.picture && (
+                            <img src={post.picture} alt={'card-pic'} className={'card-pic'}/>
+                            )}
+                        {post.video && (
+                            <iframe
+                                width={'500'}
+                                height={'300'}
+                                src={post.video}
+                                frameBorder={'0'}
+                                allow={"accelerometer; autoplay; clipboard-write; encrypted-media;" +
+                                "gyroscope; picture-in-picture"}
+                                allowFullScreen={''}
+                                title={post._id}
+                            ></iframe>
+                        )}
+                        <div className={'card-footer'}>
+                            <div className={'comment-icon'}>
+                                <img src={'./img/icons/message1.svg'} alt={'comment'}/>
+                                <span>{post.comments.length}</span>
+                            </div>
+                            <h6>Like button</h6>
+                            <img src={'./img/icons/share.svg'} alt={'share'}/>
                         </div>
                     </div>
                 </>
