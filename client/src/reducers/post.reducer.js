@@ -1,4 +1,4 @@
-import {GET_POSTS, LIKE_POSTS, UNLIKE_POSTS, UPDATE_POSTS} from "../actions/post.actions";
+import {DELETE_POSTS, GET_POSTS, LIKE_POSTS, UNLIKE_POSTS, UPDATE_POSTS} from "../actions/post.actions";
 
 const initialState = {}
 
@@ -33,6 +33,9 @@ export default function postReducer(state = initialState, action) {
                     }
                 } else return post
             })
+
+        case DELETE_POSTS:
+            return state.filter((post) => post._id !== action.payload.postId)
         default:
             return state
     }
