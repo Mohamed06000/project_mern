@@ -1,4 +1,4 @@
-import {GET_POSTS, LIKE_POSTS, UNLIKE_POSTS} from "../actions/post.actions";
+import {GET_POSTS, LIKE_POSTS, UNLIKE_POSTS, UPDATE_POSTS} from "../actions/post.actions";
 
 const initialState = {}
 
@@ -23,6 +23,15 @@ export default function postReducer(state = initialState, action) {
                         likers: post.likers.filter((id) => id !== action.payload.userId)
                     }
                 return post
+            })
+        case UPDATE_POSTS:
+            return state.map((post) => {
+                if (post._id === action.payload.postId){
+                    return {
+                        ...post,
+                        message: action.payload.message
+                    }
+                } else return post
             })
         default:
             return state
