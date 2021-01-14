@@ -15,6 +15,17 @@ const NewPostForm = () => {
 
     }
 
+    const handlePost = () => {
+
+    }
+
+    const cancelPost = () => {
+        setMessage("")
+        setPostPicture("")
+        setVideo("")
+        setFile("")
+    }
+
     useEffect(() => {
         if (!isEmpty(userData)) setIsLoading(false)
     }, [userData])
@@ -58,6 +69,16 @@ const NewPostForm = () => {
                                            onChange={(e) => handlePicture(e)}/>
                                 </>
                             )}
+                            {video && (
+                                <button onClick={() => setVideo("")}>
+                                    Supprimer video
+                                </button>
+                            )}
+                        </div>
+                        <div className={'btn-send'}>
+                            {message || postPicture || video.length > 20 ? (
+                                <button className={'cancel'} onClick={cancelPost}>Annuler message</button>) : null}
+                            <button className={"send"} onClick={handlePost}>Envoyer</button>
                         </div>
                     </div>
                     </div>
