@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useSelector} from "react-redux";
-import {isEmpty} from "../Utils";
+import {isEmpty, timestampParser} from "../Utils";
 import {NavLink} from "react-router-dom";
 
 const NewPostForm = () => {
@@ -58,29 +58,56 @@ const NewPostForm = () => {
                                   value={message}
                         />
 
+                        {message || postPicture || video.length > 20 ? (
+                            <li className={'card-container'}>
+                                <div className={'card-left'} >
+                                    <img src={userData.picture} alt={'user-pic'}/>
+                                </div>
+                                <div className={'card-right'}>
+                                    <div className={'card-header'}>
+                                        <div className={'pseudo'}>
+                                            <h3>{userData.pseudo}</h3>
+                                        </div>
+                                        <span>{timestampParser(Date.now())}</span>
+                                    </div>
+                                    <div className={'content'}>
+                                        <p>{message}</p>
+                                        <img src={postPicture} alt={''}/>
+                                        {video && (
+                                            <iframe
+                                                src={video}
+                                                frameBorder={"0"}
+                                                allow={'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'}
+                                                allowFullScreen
+                                                title={video}></iframe>
+                                        )}
+                                    </div>
+                                </div>
+                            </li>
+                        ) : null }
 
-                    <div className={'footer-form'}>
-                        <div className={'icon'}>
-                            {isEmpty(video) && (
-                                <>
-                                    <img src={'./img/icons/picture.svg'} alt={'image'}/>
-                                    <input type={'file'} id={'file-upload'} name={'file'}
-                                           accept={'.jpg, .jpeg, .png'}
-                                           onChange={(e) => handlePicture(e)}/>
-                                </>
-                            )}
-                            {video && (
-                                <button onClick={() => setVideo("")}>
-                                    Supprimer video
-                                </button>
-                            )}
+                        <div className={'footer-form'}>
+                            <div className={'icon'}>
+                                {isEmpty(video) && (
+                                    <>
+                                        <img src={'./img/icons/picture.svg'} alt={'image'}/>
+                                        <input type={'file'} id={'file-upload'} name={'file'}
+                                               accept={'.jpg, .jpeg, .png'}
+                                               onChange={(e) => handlePicture(e)}/>
+                                    </>
+                                )}
+                                {video && (
+                                    <button onClick={() => setVideo("")}>
+                                        Supprimer video
+                                    </button>
+                                )}
+                            </div>
+                            <div className={'btn-send'}>
+                                {message || postPicture || video.length > 20 ? (
+                                    <button className={'cancel'} onClick={cancelPost}>Annuler message</button>) : null}
+                                <button className={"send"} onClick={handlePost}>Envoyer</button>
+                            </div>
                         </div>
-                        <div className={'btn-send'}>
-                            {message || postPicture || video.length > 20 ? (
-                                <button className={'cancel'} onClick={cancelPost}>Annuler message</button>) : null}
-                            <button className={"send"} onClick={handlePost}>Envoyer</button>
-                        </div>
-                    </div>
                     </div>
                 </>
             )}
